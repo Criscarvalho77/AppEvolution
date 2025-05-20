@@ -1,24 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable } from 'react-native';
-import { useColorScheme } from '@/hooks/useColorScheme';
-import { Colors } from '@/constants/Colors';
+
 import LoginScreen from './Login';
 import AlterarSenhaScreen from './AlterarSenha';
 import RedefinirSenhaScreen from './RedefinirSenha';
-
 import RegistroUserScreen from './RegistroUser';
 import CadastroAtendimento from './CadastroAtendimento';
 import GerenciamentoUser from '../GerenciamentoUser';
 import GerenciamentoAgendamento from '../GerenciamentoAgendamento';
 import GerenciamentoServico from '../GerenciamentoServico';
 import Relatorio from '../Relatorio';
-
-
-// Telas
 import HomeScreen from './index';
 import AboutScreen from './Index/AboutScreen';
 import ServiceScreen from './Index/ServiceScreen';
@@ -26,15 +20,10 @@ import PortfolioScreen from './Index/PortfolioScreen';
 import TestimonialScreen from './Index/TestimonialScreen';
 import BlogScreen from './Index/BlogScreen';
 import ContactScreen from './Index/ContactScreen';
-import { RouteProp } from '@react-navigation/native';
 
-
-
-
-
-// Criando os navegadores
 const DrawerNavigator = createDrawerNavigator();
 const TabNavigator = createBottomTabNavigator();
+
 type IconName =
   | 'home'
   | 'information'
@@ -44,15 +33,14 @@ type IconName =
   | 'logo-reddit'
   | 'call';
 
-// Função para configurar as Tabs (icones)
+// Tabs
 function Tabs() {
   return (
     <TabNavigator.Navigator
-    initialRouteName="Home"
-    screenOptions={({ route }) => ({
-      tabBarIcon: ({ color, size }) => {
-        let iconName: IconName;
-
+      initialRouteName="Home"
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ color, size }) => {
+          let iconName: IconName;
           switch (route.name) {
             case 'Home':
               iconName = 'home';
@@ -78,13 +66,11 @@ function Tabs() {
             default:
               iconName = 'home';
           }
-
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: '#047fce',      // Ícone ativo (selecionado)
-        tabBarInactiveTintColor: '#001F3F',    // Ícone inativo
+        tabBarActiveTintColor: '#047fce',
+        tabBarInactiveTintColor: '#001F3F',
       })}
-
     >
       <TabNavigator.Screen name="Home" component={HomeScreen} />
       <TabNavigator.Screen name="Sobre nós" component={AboutScreen} />
@@ -97,228 +83,103 @@ function Tabs() {
   );
 }
 
-
-
+// Drawer
 export default function DrawerLayout() {
-  const colorScheme = useColorScheme();
-  const [userType, setUserType] = useState<string | null>(null); // Estado do tipo de usuário
-  const [loading, setLoading] = useState(true); // Estado para controle de carregamento
-
-  // Função para obter o tipo de usuário do AsyncStorage
-  useEffect(() => {
-    AsyncStorage.getItem('userType')
-      .then((userTypeStored) => {
-        console.log('userTypeStored:', userTypeStored); // Verifique o valor de userType
-        setUserType(userTypeStored);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error('Erro ao obter userType:', error);
-        setLoading(false);
-      });
-  }, []);
-
-  // Exibe um carregamento até que o tipo de usuário seja obtido
-  if (loading) {
-    return null; // Ou renderize um componente de carregamento (ex. um spinner)
-  }
-
-  // Função para limpar os dados do AsyncStorage
-  const handleLogout = async () => {
-    await AsyncStorage.removeItem('userId'); // Remove o userId
-    await AsyncStorage.removeItem('userName'); // Remove o userName
-    await AsyncStorage.removeItem('userType'); // Remove o userType
-    setUserType(null); // Limpa o estado local do userType
-  };
-
   return (
-    <DrawerNavigator.Navigator  // para personalizar os icones
-    screenOptions={({ navigation }) => ({
-      drawerActiveTintColor: '#00FFFF',       // Cor do ícone ativo
-      drawerInactiveTintColor: '#001F3F',     // Cor do ícone inativo
-      headerLeft: () => (
-        <Pressable
-          onPress={() => {
-              // Verifica o userType no AsyncStorage quando o botão do menu é pressionado
-              AsyncStorage.getItem('userType')
-                .then((userTypeStored) => {
-                  console.log('userTypeStored:', userTypeStored); // Verifique o valor de userType
-                  setUserType(userTypeStored); // Atualiza o estado com o valor do userType
-                  setLoading(false); // Define o estado de loading como false
-                  navigation.toggleDrawer(); // Abre ou fecha o drawer
-                })
-                .catch((error) => {
-                  console.error('Erro ao obter userType:', error);
-                  setLoading(false); // Em caso de erro, ainda define o loading como false
-                });
-            }}
-            style={{ marginLeft: 15 }}
-          >
-           <Ionicons name="menu" size={28} color={'#00FFFF'} />
-           </Pressable>
+    <DrawerNavigator.Navigator
+      screenOptions={({ navigation }) => ({
+        drawerActiveTintColor: '#5B7FA3',
+        drawerInactiveTintColor: '#001F3F',
+        headerLeft: () => (
+          <Pressable onPress={() => navigation.toggleDrawer()} style={{ marginLeft: 15 }}>
+            <Ionicons name="menu" size={28} color="#001F3F" />
+          </Pressable>
         ),
       })}
     >
-
-      {/* Tela de Home que conterá o TabNavigator */}
       <DrawerNavigator.Screen
-  name="Home"
-  options={{
-    title: 'Inicio',
-    drawerIcon: ({ color }: { color: string }) => (
-      <Ionicons name="home-outline" size={28} color={color} />
-    ),
-    headerStyle: {
-      backgroundColor: 'rgb(0, 0, 0)', // Altere a cor do fundo do cabeçalho (pode ser qualquer cor ou código de cor)
-    },
-    headerTintColor: '#fff', // Altere a cor do texto do título
-  }}
-  component={Tabs} // Aqui você usa o TabNavigator diretamente
-/>
-      
-      {userType !== '0' && userType !== '1' && (
-        <>
-          <DrawerNavigator.Screen
-            name="Login"
-            options={{
-              title: 'Login',
-              drawerIcon: ({ color }: { color: string }) => <Ionicons name="log-in-outline" size={28} color={color} />,
-            }}
-            component={LoginScreen}
-          />
-
-          <DrawerNavigator.Screen
-            name="RegistroUser"
-            options={{
-              title: 'Cadastro de Usuário',
-              drawerIcon: ({ color }: { color: string }) => <Ionicons name="person-add-outline" size={28} color={color} />,
-            }}
-            component={RegistroUserScreen} 
-          />
-
-      </>
-)}
-      {/* Condicional para gerenciar as telas, com base no tipo de usuário */}
-      {userType === '0' && (
-        <>
-          <DrawerNavigator.Screen
-            name="GerenciamentoUser"
-            options={{
-              title: 'Gerenciamento de Usuarios',
-              drawerIcon: ({ color }: { color: string }) => <Ionicons name="people" size={28} color={color} />,
-            }}
-            component={GerenciamentoUser}
-          />
-          <DrawerNavigator.Screen
-            name="GerenciamentoAgendamento"
-            options={{
-              title: 'Gerenciamento de Agendamento',
-              drawerIcon: ({ color }: { color: string }) => <Ionicons name="calendar-outline" size={28} color={color} />,
-            }}
-            component={GerenciamentoAgendamento}
-          />
-          <DrawerNavigator.Screen
-            name="GerenciamentoServico"
-            options={{
-              title: 'Gerenciamento de Serviço',
-              drawerIcon: ({ color }: { color: string }) => <Ionicons name="construct-outline" size={28} color={color} />,
-            }}
-            component={GerenciamentoServico}
-          />
-          <DrawerNavigator.Screen
-            name="Reletorio"
-            options={{
-              title: 'Relatorio',
-              drawerIcon: ({ color }: { color: string }) => <Ionicons name="construct-outline" size={28} color={color} />,
-            }}
-            component={Relatorio}
-          />
-        <DrawerNavigator.Screen
-          name="AlterarSenha"
-          options={{
-            title: 'Alterar Senha',
-            drawerIcon: ({ color }: { color: string }) => <Ionicons name="key-outline" size={28} color={color} />,
-          }}
-          component={AlterarSenhaScreen} 
-       />
-
-      <DrawerNavigator.Screen
-        name="RedefinirSenha"
+        name="Home"
         options={{
-          title: 'Redefinir Senha',
-          drawerIcon: ({ color }: { color: string }) => <Ionicons name="lock-open-outline" size={28} color={color} />,
+          title: 'Início',
+          drawerIcon: ({ color }) => <Ionicons name="home-outline" size={28} color={color} />,
+          headerStyle: { backgroundColor: 'rgb(0, 0, 0)' },
+          headerTintColor: '#fff',
         }}
-        component={RedefinirSenhaScreen} 
+        component={Tabs}
       />
-          <DrawerNavigator.Screen
-            name="Sair"
-            options={{
-              title: 'Sair',
-              drawerIcon: ({ color }: { color: string }) => <Ionicons name="log-out-outline" size={28} color={color} />,
-            }}
-            listeners={{
-              focus: () => {
-                console.log('userType:', userType); // Verifique o estado antes de realizar a ação
-                handleLogout(); // Limpa os dados de usuário do AsyncStorage
-              },
-            }}
-            component={() => null} // Componente vazio, já que você não quer mudar de tela
-          />
-        </>
-      )}
-      
-      {userType === '1' && (
-        <>
-          
-          <DrawerNavigator.Screen
-            name="GerenciamentoAgendamento"
-            options={{
-              title: 'Gerenciamento de Agendamento',
-              drawerIcon: ({ color }: { color: string }) => <Ionicons name="calendar-outline" size={28} color={color} />,
-            }}
-            component={GerenciamentoAgendamento}
-          />
-          <DrawerNavigator.Screen
-            name="CadastroAtendimento"
-            options={{
-              title: 'Cadastro do Atendimento',
-              drawerIcon: ({ color }: { color: string }) => <Ionicons name="person-add-outline" size={28} color={color} />,
-            }}
-            component={CadastroAtendimento} // Substitua pelo componente correto, caso tenha outro
-          />
-                <DrawerNavigator.Screen
+      {/* Telas livres, disponíveis sem controle de usuário */}
+      <DrawerNavigator.Screen
+        name="Login"
+        component={LoginScreen}
+        options={{
+          drawerIcon: ({ color }) => <Ionicons name="log-in-outline" size={28} color={color} />,
+          title: 'Login',
+        }}
+      />
+      <DrawerNavigator.Screen
+        name="RegistroUser"
+        component={RegistroUserScreen}
+        options={{
+          drawerIcon: ({ color }) => <Ionicons name="person-add-outline" size={28} color={color} />,
+          title: 'Cadastro de Usuário',
+        }}
+      />
+      <DrawerNavigator.Screen
+        name="CadastroAtendimento"
+        component={CadastroAtendimento}
+        options={{
+          drawerIcon: ({ color }) => <Ionicons name="clipboard-outline" size={28} color={color} />,
+          title: 'Cadastro de Atendimento',
+        }}
+      />
+      <DrawerNavigator.Screen
+        name="GerenciamentoUser"
+        component={GerenciamentoUser}
+        options={{
+          drawerIcon: ({ color }) => <Ionicons name="people" size={28} color={color} />,
+          title: 'Gerenciar Usuários',
+        }}
+      />
+      <DrawerNavigator.Screen
+        name="GerenciamentoAgendamento"
+        component={GerenciamentoAgendamento}
+        options={{
+          drawerIcon: ({ color }) => <Ionicons name="calendar-outline" size={28} color={color} />,
+          title: 'Gerenciar Agendamentos',
+        }}
+      />
+      <DrawerNavigator.Screen
+        name="GerenciamentoServico"
+        component={GerenciamentoServico}
+        options={{
+          drawerIcon: ({ color }) => <Ionicons name="construct-outline" size={28} color={color} />,
+          title: 'Gerenciar Serviços',
+        }}
+      />
+      <DrawerNavigator.Screen
+        name="Relatorio"
+        component={Relatorio}
+        options={{
+          drawerIcon: ({ color }) => <Ionicons name="bar-chart-outline" size={28} color={color} />,
+          title: 'Relatório',
+        }}
+      />
+      <DrawerNavigator.Screen
         name="AlterarSenha"
+        component={AlterarSenhaScreen}
         options={{
+          drawerIcon: ({ color }) => <Ionicons name="key-outline" size={28} color={color} />,
           title: 'Alterar Senha',
-          drawerIcon: ({ color }: { color: string }) => <Ionicons name="key-outline" size={28} color={color} />,
         }}
-        component={AlterarSenhaScreen} 
       />
-
       <DrawerNavigator.Screen
         name="RedefinirSenha"
+        component={RedefinirSenhaScreen}
         options={{
+          drawerIcon: ({ color }) => <Ionicons name="lock-open-outline" size={28} color={color} />,
           title: 'Redefinir Senha',
-          drawerIcon: ({ color }: { color: string }) => <Ionicons name="lock-open-outline" size={28} color={color} />,
         }}
-        component={RedefinirSenhaScreen} 
       />
-          <DrawerNavigator.Screen
-            name="Sair"
-            options={{
-              title: 'Sair',
-              drawerIcon: ({ color }: { color: string }) => <Ionicons name="log-out-outline" size={28} color={color} />,
-            }}
-            listeners={{
-              focus: () => {
-                console.log('userType:', userType); // Verifique o estado antes de realizar a ação
-                handleLogout(); // Limpa os dados de usuário do AsyncStorage
-              },
-            }}
-            component={() => null} // Componente vazio, já que você não quer mudar de tela
-          />
-        </>
-      )}
     </DrawerNavigator.Navigator>
   );
 }

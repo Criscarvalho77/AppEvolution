@@ -1,14 +1,24 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Image, Alert } from 'react-native';
-import { TextInput, Button, Text, Snackbar } from 'react-native-paper';
+import {
+  View,
+  StyleSheet,
+  Image,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  Pressable,
+  Text,
+} from 'react-native';
+import { TextInput, Snackbar } from 'react-native-paper';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useRouter } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const API_URL = 'http://10.0.2.2:3000';
 
-// Tipagem correta para evitar erro do TypeScript
 type RootStackParamList = {
   Home: undefined;
   Login: undefined;
@@ -47,7 +57,7 @@ export default function RedefinirSenhaScreen() {
       if (response.status === 200) {
         setVisibleSnackbar(true);
         setTimeout(() => {
-          navigation.reset({ index: 0, routes: [{ name: 'Login' }] }); // Redireciona para a tela de login
+          navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
         }, 1000);
       } else {
         Alert.alert('Erro', response.data.error || 'Falha ao redefinir senha.');
@@ -61,74 +71,93 @@ export default function RedefinirSenhaScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.imageWrapper}>
-          <Image source={require('../../assets/images/Elysium.png')} style={styles.image} />
+    <KeyboardAvoidingView
+      style={{ flex: 1, backgroundColor: '#000' }}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
+      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+        <View style={styles.header}>
+          <View style={styles.imageWrapper}>
+            <Image source={require('../../assets/images/Evolution.png')} style={styles.image} />
+          </View>
+          <Text style={styles.brand}>Evolution Assistência Técnica</Text>
         </View>
-        <Text style={styles.brand}>Elysium Beauty</Text>
-      </View>
 
-      <Text style={styles.title}>Redefinir Senha</Text>
+        <Text style={styles.title}>Redefinir Senha</Text>
 
-      <TextInput
-        label="E-mail"
-        value={email}
-        onChangeText={setEmail}
-        style={styles.input}
-        autoCapitalize="none"
-        keyboardType="email-address"
-      />
+        <TextInput
+          label="E-mail"
+          mode="outlined"
+          value={email}
+          onChangeText={setEmail}
+          style={styles.input}
+          autoCapitalize="none"
+          keyboardType="email-address"
+          theme={{ colors: { primary: '#ccc', background: '#fff' } }}
+        />
 
-      <TextInput
-        label="Nova Senha"
-        value={novaSenha}
-        onChangeText={setNovaSenha}
-        secureTextEntry
-        style={styles.input}
-      />
+        <TextInput
+          label="Nova Senha"
+          mode="outlined"
+          value={novaSenha}
+          onChangeText={setNovaSenha}
+          secureTextEntry
+          style={styles.input}
+          theme={{ colors: { primary: '#ccc', background: '#fff' } }}
+        />
 
-      <TextInput
-        label="Confirmar Nova Senha"
-        value={confirmarSenha}
-        onChangeText={setConfirmarSenha}
-        secureTextEntry
-        style={styles.input}
-      />
+        <TextInput
+          label="Confirmar Nova Senha"
+          mode="outlined"
+          value={confirmarSenha}
+          onChangeText={setConfirmarSenha}
+          secureTextEntry
+          style={styles.input}
+          theme={{ colors: { primary: '#ccc', background: '#fff' } }}
+        />
 
-      <Button
-        mode="contained"
-        onPress={handleChangePassword}
-        style={styles.button}
-        loading={loading}
-        disabled={loading}
-      >
-        Redefinir Senha
-      </Button>
+        <LinearGradient
+          colors={['#b0b0b0', '#e0e0e0', '#9a9a9a', '#d6d6d6', '#8c8c8c']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.buttonGradient}
+        >
+          <Pressable onPress={handleChangePassword} style={styles.buttonInner} disabled={loading}>
+            <Text style={styles.buttonText}>{loading ? 'Aguarde...' : 'Redefinir Senha'}</Text>
+          </Pressable>
+        </LinearGradient>
 
-      <Snackbar
-        visible={visibleSnackbar}
-        onDismiss={() => setVisibleSnackbar(false)}
-        duration={Snackbar.DURATION_SHORT}
-      >
-        Senha redefinida com sucesso!
-      </Snackbar>
-    </View>
+        <Text
+          style={styles.link}
+          onPress={() => router.push('/(tabs)/Login')}
+        >
+          Voltar para login
+        </Text>
+
+        <Snackbar
+          visible={visibleSnackbar}
+          onDismiss={() => setVisibleSnackbar(false)}
+          duration={Snackbar.DURATION_SHORT}
+        >
+          Senha redefinida com sucesso!
+        </Snackbar>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
+    flexGrow: 1,
+    backgroundColor: '#000',
     alignItems: 'center',
-    padding: 20,
-    backgroundColor: '#D2B48C',
+    paddingVertical: 30,
+    paddingHorizontal: 20,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 25,
   },
   imageWrapper: {
     width: 80,
@@ -143,24 +172,45 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   brand: {
-    fontSize: 32,
+    fontSize: 20,
     fontWeight: 'bold',
-    color: '#5D4037',
-    fontFamily: 'serif',
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 20,
+    color: '#fff',
     textAlign: 'center',
   },
-  input: {
-    width: '100%',
+  title: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#fff',
     marginBottom: 15,
   },
-  button: {
+  input: {
+    width: '90%',
+    marginBottom: 12,
+    height: 40,
+  },
+  buttonGradient: {
+    width: '90%',
+    borderRadius: 12,
+    marginTop: 15,
+    paddingVertical: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonInner: {
     width: '100%',
-    marginTop: 10,
-    backgroundColor: '#A67B5B',
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#333',
+    fontWeight: 'bold',
+    fontSize: 17,
+    textShadowColor: '#fff7',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 1,
+  },
+  link: {
+    color: '#ccc',
+    marginTop: 15,
+    textDecorationLine: 'underline',
   },
 });

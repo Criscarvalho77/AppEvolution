@@ -79,7 +79,7 @@ const GerenciamentoUser = () => {
       <SafeAreaView style={styles.container}>
         {/* Adicionando a imagem acima do botão */}
         <Image 
-          source={require('../assets/images/Elysium.png')} 
+          source={require('../assets/images/Evolution.png')} 
           style={styles.image} 
         />        
         <Button
@@ -285,7 +285,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#D2B48C', // Cor marrom claro
+    backgroundColor: '#000000', // preto
   },
   
   image: {
@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   modalHeader: {
-    backgroundColor: '#D2B48C', // Marrom claro
+    backgroundColor: '#000000', // Preto
     alignItems: 'center',
     paddingVertical: 10,
     borderTopLeftRadius: 10,
@@ -347,7 +347,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   modalFooter: {
-    backgroundColor: '#D2B48C', // Marrom claro
+    backgroundColor: '#000000', // Preto
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',

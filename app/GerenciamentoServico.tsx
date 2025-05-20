@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Provider as PaperProvider, DataTable, TextInput, Modal, Portal, IconButton, Button, Text } from 'react-native-paper';
-import { SafeAreaView, StyleSheet, View, Image } from 'react-native'; 
+import { SafeAreaView, StyleSheet, View, Image } from 'react-native';
 import axios from 'axios';
 
 const API_URL = 'http://10.0.2.2:3000';
@@ -77,10 +77,7 @@ const GerenciamentoServico = () => {
   return (
     <PaperProvider>
       <SafeAreaView style={styles.container}>
-        <Image 
-          source={require('../assets/images/Elysium.png')} 
-          style={styles.image} 
-        />        
+        <Image source={require('../assets/images/Evolution.png')} style={styles.image} />
         <Button
           icon="plus"
           mode="contained"
@@ -112,24 +109,8 @@ const GerenciamentoServico = () => {
                 <DataTable.Cell style={styles.columnCell}><Text>{service.tiposervico}</Text></DataTable.Cell>
                 <DataTable.Cell style={styles.columnCell}><Text>{service.valor}</Text></DataTable.Cell>
                 <DataTable.Cell style={styles.columnCell}>
-                  <IconButton
-                    icon="pencil"
-                    size={20}
-                    onPress={() => {
-                      setCurrentService(service);
-                      showModal('editService');
-                    }}
-                    iconColor="blue"
-                  />
-                  <IconButton
-                    icon="delete"
-                    size={20}
-                    onPress={() => {
-                      setCurrentService(service);
-                      showModal('deleteService');
-                    }}
-                    iconColor="red"
-                  />
+                  <IconButton icon="pencil" size={20} onPress={() => { setCurrentService(service); showModal('editService'); }} iconColor="blue" />
+                  <IconButton icon="delete" size={20} onPress={() => { setCurrentService(service); showModal('deleteService'); }} iconColor="red" />
                 </DataTable.Cell>
               </DataTable.Row>
             ))
@@ -140,15 +121,12 @@ const GerenciamentoServico = () => {
           )}
         </DataTable>
 
-        {/* Modais para Serviços */}
-
+        {/* Modal Adicionar */}
         <Portal>
           <Modal visible={visible.addService} onDismiss={() => hideModal('addService')} contentContainerStyle={styles.modal}>
-            {/* Cabeçalho */}
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>Adicionar Serviço</Text>
             </View>
-            {/* Corpo */}
             <View style={styles.modalContent}>
               <View style={styles.gridContainer}>
                 <TextInput
@@ -161,26 +139,24 @@ const GerenciamentoServico = () => {
                 <TextInput
                   label="Valor"
                   mode="outlined"
+                  value={newService.valor}
                   onChangeText={text => setNewService(prev => ({ ...prev, valor: text }))}
                   style={styles.gridItem}
                 />
-               </View>
-               
               </View>
-            {/* Rodapé */}
-           <View style={styles.modalFooter}>
-             <Button mode="contained" onPress={addService}>Adicionar</Button>
-           </View>
+            </View>
+            <View style={styles.modalFooter}>
+              <Button mode="contained" onPress={addService} textColor="white">Adicionar</Button>
+            </View>
           </Modal>
         </Portal>
 
+        {/* Modal Editar */}
         <Portal>
           <Modal visible={visible.editService} onDismiss={() => hideModal('editService')} contentContainerStyle={styles.modal}>
-            {/* Cabeçalho */}
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>Editar Serviço</Text>
             </View>
-
             <View style={styles.modalContent}>
               <View style={styles.gridContainer}>
                 <TextInput
@@ -199,34 +175,28 @@ const GerenciamentoServico = () => {
                 />
               </View>
             </View>
-            {/* Rodapé */}
             <View style={styles.modalFooter}>
-            <Button mode="contained" onPress={updateService}>Atualizar</Button>
+              <Button mode="contained" onPress={updateService} textColor="white">Atualizar</Button>
             </View>
           </Modal>
         </Portal>
 
+        {/* Modal Deletar */}
         <Portal>
           <Modal visible={visible.deleteService} onDismiss={() => hideModal('deleteService')} contentContainerStyle={styles.modal}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Deletar Serviço</Text>
+            </View>
             <View style={styles.modalContent}>
-              {/* Cabeçalho */}
-              <View style={styles.modalHeader}>
-                <Text style={styles.modalTitle}>Deletar Serviço</Text>
-              </View>
-
-              {/* Corpo */}
               <Text style={styles.modalText}>
                 Você tem certeza que deseja deletar o serviço <Text style={styles.bold}>{currentService?.tiposervico}</Text>?
               </Text>
-
-              {/* Rodapé */}
-              <View style={styles.modalFooter}>
-                <Button mode="contained" onPress={deleteService} style={styles.deleteButton}>Deletar</Button>
-              </View>
+            </View>
+            <View style={styles.modalFooter}>
+              <Button mode="contained" onPress={deleteService} style={styles.deleteButton} textColor="white">Deletar</Button>
             </View>
           </Modal>
         </Portal>
-
       </SafeAreaView>
     </PaperProvider>
   );
@@ -236,15 +206,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#D2B48C', // Cor marrom claro
+    backgroundColor: '#000', // Fundo preto
   },
   image: {
-    width: 100, // Define a largura da imagem
-    height: 100, // Define a altura da imagem, igual à largura
-    resizeMode: 'cover', // Ajusta a imagem para cobrir o container
-    marginBottom: 20, // Espaçamento entre a imagem e o botão
-    borderRadius: 50, // Aplica bordas arredondadas (50% de 100px)
-    alignSelf: 'center', // Centraliza a imagem horizontalmente
+    width: 100,
+    height: 100,
+    resizeMode: 'cover',
+    marginBottom: 20,
+    borderRadius: 50,
+    alignSelf: 'center',
   },
   columnHeader: {
     borderRightWidth: 1,
@@ -254,6 +224,7 @@ const styles = StyleSheet.create({
   },
   columnHeaderText: {
     fontWeight: 'bold',
+    color: '#fff',
   },
   columnCell: {
     borderRightWidth: 1,
@@ -264,29 +235,40 @@ const styles = StyleSheet.create({
   },
   modal: {
     backgroundColor: 'white',
-    padding: 20,
-    margin: 20,
     borderRadius: 10,
-  },
-  modalContent: {
-    alignItems: 'center',
+    overflow: 'hidden',
   },
   modalHeader: {
     width: '100%',
-    backgroundColor: '#D2B48C', // Marrom claro
+    backgroundColor: '#D2B48C',
     paddingVertical: 10,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
     alignItems: 'center',
   },
   modalTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: 'white', // Texto branco para contraste
+    color: '#fff',
+  },
+  modalContent: {
+    padding: 20,
+    alignItems: 'center',
+  },
+  modalFooter: {
+    marginTop: 10,
+    width: '100%',
+    backgroundColor: '#D2B48C',
+    paddingVertical: 10,
+    alignItems: 'center',
   },
   modalText: {
     marginVertical: 15,
     textAlign: 'center',
+  },
+  deleteButton: {
+    backgroundColor: 'red',
+  },
+  bold: {
+    fontWeight: 'bold',
   },
   gridContainer: {
     width: '100%',
@@ -295,21 +277,6 @@ const styles = StyleSheet.create({
   },
   gridItem: {
     width: '100%',
-  },
-  modalFooter: {
-    marginTop: 20,
-    width: '100%',
-    backgroundColor: '#D2B48C', // Mudando para branco
-    paddingVertical: 10,
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
-    alignItems: 'center',
-  },
-  deleteButton: {
-    backgroundColor: 'red',
-  },
-  bold: {
-    fontWeight: 'bold',
   },
 });
 

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Alert, Image } from 'react-native';
-import { TextInput, Button, Text } from 'react-native-paper';
+import { View, StyleSheet, Alert, Image, Pressable, Text, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { TextInput } from 'react-native-paper';
 import { useRouter } from 'expo-router';
-import axios from 'axios'; // Importando apenas o Axios
+import axios from 'axios';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const API_URL = 'http://10.0.2.2:3000'; // Use o IP da sua máquina
 
@@ -16,17 +17,13 @@ export default function RegisterScreen() {
 
   const handleRegister = async () => {
     try {
-      // Verificando se todos os campos foram preenchidos
       if (!dataAtendimento || !dthoraAgendamento || !horario || !fkUsuarioId || !fkServicoId) {
         Alert.alert('Erro', 'Todos os campos são obrigatórios.');
         return;
       }
-  
-      // Formatando as datas para o padrão ISO 8601
       const formattedDataAtendimento = new Date(dataAtendimento).toISOString();
       const formattedDthoraAgendamento = new Date(dthoraAgendamento + 'T' + horario).toISOString();
-  
-      // Estrutura do novo agendamento
+
       const newAgendamento = {
         dataatendimento: formattedDataAtendimento,
         dthoraagendamento: formattedDthoraAgendamento,
@@ -34,40 +31,28 @@ export default function RegisterScreen() {
         fk_usuario_id: parseInt(fkUsuarioId),
         fk_servico_id: parseInt(fkServicoId),
       };
-  
-      // Enviando requisição POST para a API com axios
-      const response = await axios.post('http://10.0.2.2:3000/agendamento/inserir', newAgendamento, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
+
+      const response = await axios.post(`${API_URL}/agendamento/inserir`, newAgendamento, {
+        headers: { 'Content-Type': 'application/json' },
       });
-  
-      // Verificando a resposta do servidor
+
       if (response.status === 201) {
         Alert.alert('Sucesso', response.data.message);
-        router.push('/Login'); // Redireciona para a tela de login após cadastro
+        router.push('/Login');
       }
-  
-      // Limpeza do estado
+
       setDataAtendimento('');
       setDthoraAgendamento('');
       setHorario('');
       setFkUsuarioId('');
       setFkServicoId('');
-  
     } catch (error) {
-      // Tratamento de erro aprimorado
       if (axios.isAxiosError(error)) {
-        // Caso seja erro do Axios
         const errorMessage = error.response?.data?.message || `Erro: ${error.message}`;
         Alert.alert('Erro', errorMessage);
-  
-        // Adicionando mais logs para diagnosticar o erro
         console.error('Erro detalhado do Axios:', error.response?.data);
         console.error('Erro status:', error.response?.status);
-        console.error('Erro headers:', error.response?.headers);
       } else if (error instanceof Error) {
-        // Caso seja um erro genérico do JavaScript
         console.error('Erro ao adicionar agendamento:', error.message);
       } else {
         console.error('Erro desconhecido:', error);
@@ -77,99 +62,126 @@ export default function RegisterScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      {/* Cabeçalho com logo e nome */}
-      <View style={styles.header}>
-        <Image source={require('../../assets/images/Elysium.png')} style={styles.image} />
+    <KeyboardAvoidingView
+      style={{ flex: 1, backgroundColor: '#000' }}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
+      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+        <Image source={require('../../assets/images/Evolution.png')} style={styles.image} />
         <Text style={styles.brand}>Evolution Assistência Técnica</Text>
-      </View>
 
-      <Text style={styles.title}>Adicionar Agendamento</Text>
-      <TextInput
-        label="Data Atendimento"
-        mode="outlined"
-        value={dataAtendimento}
-        onChangeText={setDataAtendimento}
-        style={styles.input}
-        placeholder="YYYY-MM-DD"
-      />
-      <TextInput
-        label="Data Agendamento"
-        mode="outlined"
-        value={dthoraAgendamento}
-        onChangeText={setDthoraAgendamento}
-        style={styles.input}
-        placeholder="YYYY-MM-DD"
-      />
-      <TextInput
-        label="Horário"
-        mode="outlined"
-        value={horario}
-        onChangeText={setHorario}
-        style={styles.input}
-        placeholder="HH:mm:ss"
-      />
-      <TextInput
-        label="ID Usuário"
-        mode="outlined"
-        value={fkUsuarioId}
-        onChangeText={setFkUsuarioId}
-        keyboardType="numeric"
-        style={styles.input}
-      />
-      <TextInput
-        label="ID Serviço"
-        mode="outlined"
-        value={fkServicoId}
-        onChangeText={setFkServicoId}
-        keyboardType="numeric"
-        style={styles.input}
-      />
-      <Button mode="contained" onPress={handleRegister} style={styles.button}>
-        Adicionar
-      </Button>
-    </View>
+        <Text style={styles.title}>Adicionar Agendamento</Text>
+
+        <TextInput
+          label="Data Atendimento"
+          mode="outlined"
+          value={dataAtendimento}
+          onChangeText={setDataAtendimento}
+          style={styles.input}
+          placeholder="YYYY-MM-DD"
+          theme={{ colors: { primary: '#ccc', background: '#fff' } }}
+        />
+        <TextInput
+          label="Data Agendamento"
+          mode="outlined"
+          value={dthoraAgendamento}
+          onChangeText={setDthoraAgendamento}
+          style={styles.input}
+          placeholder="YYYY-MM-DD"
+          theme={{ colors: { primary: '#ccc', background: '#fff' } }}
+        />
+        <TextInput
+          label="Horário"
+          mode="outlined"
+          value={horario}
+          onChangeText={setHorario}
+          style={styles.input}
+          placeholder="HH:mm:ss"
+          theme={{ colors: { primary: '#ccc', background: '#fff' } }}
+        />
+        <TextInput
+          label="ID Usuário"
+          mode="outlined"
+          value={fkUsuarioId}
+          onChangeText={setFkUsuarioId}
+          keyboardType="numeric"
+          style={styles.input}
+          theme={{ colors: { primary: '#ccc', background: '#fff' } }}
+        />
+        <TextInput
+          label="ID Serviço"
+          mode="outlined"
+          value={fkServicoId}
+          onChangeText={setFkServicoId}
+          keyboardType="numeric"
+          style={styles.input}
+          theme={{ colors: { primary: '#ccc', background: '#fff' } }}
+        />
+
+        <LinearGradient
+          colors={['#b0b0b0', '#e0e0e0', '#9a9a9a', '#d6d6d6', '#8c8c8c']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.buttonGradient}
+        >
+          <Pressable onPress={handleRegister} style={styles.buttonInner}>
+            <Text style={styles.buttonText}>Adicionar</Text>
+          </Pressable>
+        </LinearGradient>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
+    flexGrow: 1,
+    backgroundColor: '#000',
     alignItems: 'center',
-    padding: 20,
-    backgroundColor: '#000000', // Marrom claro
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
+    paddingVertical: 30,
+    paddingHorizontal: 20,
   },
   image: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    marginRight: 10,
+    width: 80,
+    height: 80,
+    marginBottom: 10,
   },
   brand: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
-    color: '#5D4037',
+    color: '#fff',
+    marginBottom: 25,
+    textAlign: 'center',
   },
   title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-    color: '#FFFFFF', 
-  },
-  input: {
-    width: '100%',
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#fff',
     marginBottom: 15,
   },
-  button: {
+  input: {
+    width: '90%',
+    marginBottom: 12,
+    height: 35,
+  },
+  buttonGradient: {
+    width: '90%',
+    borderRadius: 12,
+    marginTop: 15,
+    paddingVertical: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonInner: {
     width: '100%',
-    marginTop: 10,
-    backgroundColor: '#A67B5B',
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#333',
+    fontWeight: 'bold',
+    fontSize: 17,
+    textShadowColor: '#fff7',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 1,
   },
 });

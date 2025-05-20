@@ -52,24 +52,34 @@ const Relatorio = () => {
   return (
     <Provider>
       <View style={styles.container}>
-        
 
-        {/* Imagem e nome ao lado */}
-        <View style={styles.header}>
+        {/* Logo centralizada */}
+        <View style={styles.logoContainer}>
           <Image 
-            source={require('../assets/images/Elysium.png')} 
+            source={require('../assets/images/Evolution.png')} 
             style={styles.image} 
           />
-          <Text style={styles.name}>Elysium Beauty</Text>
+          <Text style={styles.name}>Evolution Assistência Técnica</Text>
         </View>
+
         <Text style={styles.title}>Relatório</Text>
+
         {/* Filtro para Coluna 1 */}
         <View style={styles.filterGroup}>
           <Text style={styles.filterText}>Escolha a coluna 1:</Text>
           <Menu
             visible={visible1}
             onDismiss={() => setVisible1(false)}
-            anchor={<PaperButton mode="contained" onPress={() => setVisible1(true)} style={styles.menuButton}>{campo1 || 'Escolha uma coluna'}</PaperButton>}
+            anchor={
+              <PaperButton 
+                mode="contained" 
+                onPress={() => setVisible1(true)} 
+                style={styles.menuButton}
+                labelStyle={styles.menuLabel}
+              >
+                {campo1 || 'Escolha uma coluna'}
+              </PaperButton>
+            }
           >
             {options.map((option, index) => (
               <Menu.Item
@@ -88,6 +98,7 @@ const Relatorio = () => {
             placeholder="Digite o filtro"
             value={valor1}
             onChangeText={setValor1}
+            placeholderTextColor="#999"
           />
         </View>
 
@@ -97,7 +108,16 @@ const Relatorio = () => {
           <Menu
             visible={visible2}
             onDismiss={() => setVisible2(false)}
-            anchor={<PaperButton mode="contained" onPress={() => setVisible2(true)} style={styles.menuButton}>{campo2 || 'Escolha uma coluna'}</PaperButton>}
+            anchor={
+              <PaperButton 
+                mode="contained" 
+                onPress={() => setVisible2(true)} 
+                style={styles.menuButton}
+                labelStyle={styles.menuLabel}
+              >
+                {campo2 || 'Escolha uma coluna'}
+              </PaperButton>
+            }
           >
             {options.map((option, index) => (
               <Menu.Item
@@ -116,6 +136,7 @@ const Relatorio = () => {
             placeholder="Digite o filtro"
             value={valor2}
             onChangeText={setValor2}
+            placeholderTextColor="#999"
           />
         </View>
 
@@ -125,7 +146,16 @@ const Relatorio = () => {
           <Menu
             visible={visible3}
             onDismiss={() => setVisible3(false)}
-            anchor={<PaperButton mode="contained" onPress={() => setVisible3(true)} style={styles.menuButton}>{campo3 || 'Escolha uma coluna'}</PaperButton>}
+            anchor={
+              <PaperButton 
+                mode="contained" 
+                onPress={() => setVisible3(true)} 
+                style={styles.menuButton}
+                labelStyle={styles.menuLabel}
+              >
+                {campo3 || 'Escolha uma coluna'}
+              </PaperButton>
+            }
           >
             {options.map((option, index) => (
               <Menu.Item
@@ -144,13 +174,14 @@ const Relatorio = () => {
             placeholder="Digite o filtro"
             value={valor3}
             onChangeText={setValor3}
+            placeholderTextColor="#999"
           />
         </View>
 
-        {/* Botão de pesquisa */}
-        <PaperButton mode="contained" onPress={handleFiltrar} style={styles.searchButton}>Pesquisar</PaperButton>
+        <PaperButton mode="contained" onPress={handleFiltrar} style={styles.searchButton}>
+          Pesquisar
+        </PaperButton>
 
-        {/* Exibição dos agendamentos */}
         <FlatList
           data={agendamentos}
           keyExtractor={(item, index) => index.toString()}
@@ -159,7 +190,7 @@ const Relatorio = () => {
               {/* Exiba os dados do agendamento aqui */}
             </View>
           )}
-          ListEmptyComponent={<Text>Nenhum agendamento encontrado.</Text>}
+          ListEmptyComponent={<Text style={styles.filterText}>Nenhum agendamento encontrado.</Text>}
         />
       </View>
     </Provider>
@@ -170,60 +201,61 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#D2B48C', // Cor marrom claro (igual ao estilo de GerenciamentoUser)
+    backgroundColor: '#000', // fundo preto
+  },
+  logoContainer: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  image: {
+    width: 100,
+    height: 100,
+    resizeMode: 'contain',
+    marginBottom: 5,
+  },
+  name: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#fff',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#333', // Cor do texto mais escura para o título
+    color: '#fff',
     marginBottom: 20,
     textAlign: 'center',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
-    justifyContent: 'center',
-  },
-  image: {
-    width: 80,
-    height: 80,
-    resizeMode: 'contain',
-    marginRight: 10,
-    borderRadius: 40, // Arredonda as bordas da imagem
-  },
-  name: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#333',
   },
   filterGroup: {
     marginBottom: 20,
   },
   filterText: {
     fontSize: 16,
-    color: '#333', // Cor do texto
+    color: '#fff',
   },
   input: {
     height: 40,
-    borderColor: '#ccc',
+    borderColor: '#555',
     borderWidth: 1,
     marginBottom: 10,
     paddingHorizontal: 8,
     borderRadius: 5,
+    color: '#fff',
   },
   menuButton: {
-    backgroundColor: '#8B4513', // Cor marrom escuro (igual ao estilo de GerenciamentoUser)
+    backgroundColor: '#222',
     marginBottom: 10,
   },
+  menuLabel: {
+    color: '#fff',
+  },
   searchButton: {
-    backgroundColor: '#8B4513', // Cor marrom escuro para o botão de pesquisa
+    backgroundColor: '#555',
     marginVertical: 10,
   },
   agendamentoItem: {
     padding: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    borderBottomColor: '#444',
     marginBottom: 10,
   },
 });

@@ -167,7 +167,7 @@ const GerenciamentoAgendamento = () => {
       <SafeAreaView style={styles.container}>
         {/* Adicionando a imagem acima do botão */}
                 <Image 
-                  source={require('../assets/images/Elysium.png')} 
+                  source={require('../assets/images/Evolution.png')} 
                   style={styles.image} 
                 />
         <Button
@@ -193,13 +193,13 @@ const GerenciamentoAgendamento = () => {
            <Text style={styles.columnHeaderText}>Data do Atendimento</Text>
         </DataTable.Title>
         <DataTable.Title style={styles.columnHeader}>
-           <Text style={styles.columnHeaderText}>Horario</Text>             
+           <Text style={styles.columnHeaderText}>Horário</Text>             
         </DataTable.Title>
         <DataTable.Title style={styles.columnHeader}>
           <Text style={styles.columnHeaderText}>Serviço</Text>
         </DataTable.Title>
         <DataTable.Title style={styles.columnHeader}>
-          <Text style={styles.columnHeaderText}>Usuario</Text>
+          <Text style={styles.columnHeaderText}>Usuário</Text>
         </DataTable.Title>              
         <DataTable.Title style={styles.columnHeader}>
           <Text style={styles.columnHeaderText}>Ações</Text>
@@ -372,12 +372,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#D2B48C', // Cor marrom claro
+    backgroundColor: '#000000', // Preto
   },
   
   image: {
-    width: 100, // Define a largura da imagem
-    height: 100, // Define a altura da imagem, igual à largura
+    width: 120, // Define a largura da imagem
+    height: 120, // Define a altura da imagem, igual à largura
     resizeMode: 'cover', // Ajusta a imagem para cobrir o container
     marginBottom: 20, // Espaçamento entre a imagem e o botão
     borderRadius: 50, // Aplica bordas arredondadas (50% de 100px)
@@ -403,7 +403,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   modalHeader: {
-    backgroundColor: '#D2B48C', // Marrom claro
+    backgroundColor: '#FFFFFF', // Preto
     alignItems: 'center',
     paddingVertical: 10,
     borderTopLeftRadius: 10,
@@ -411,9 +411,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   modalTitle: {
-    fontSize: 18,
+    fontSize: 10,
     fontWeight: 'bold',
-    color: 'white', // Cor do texto no cabeçalho
+    color: 'white', 
   },
   modalContent: {
     marginBottom: 20,
@@ -426,15 +426,15 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   modalText: {
-    fontSize: 14,
-    color: '#555',
+    fontSize: 10,
+    color: '#FFFFFF',
     marginBottom: 15,
   },
   bold: {
     fontWeight: 'bold',
   },
   modalFooter: {
-    backgroundColor: '#D2B48C', // Marrom claro
+    backgroundColor: '#000000', // Preto
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
@@ -452,9 +452,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   columnHeader: {
-    width: 200, // Aumente conforme necessário
+    width: 200, // Aumente conforme necessário (coluna da pagina +adicionar agendamento)
     borderRightWidth: 1,
-    borderRightColor: '#ccc',
+    borderRightColor: 'rgb(255, 253, 253)',
     justifyContent: 'center',
     alignItems: 'center',
   },
